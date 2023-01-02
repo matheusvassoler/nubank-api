@@ -5,22 +5,20 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-private const val BASE_URL = "http://192.168.15.70/"
-
 class BackendClient {
 
     private var retrofit: Retrofit? = null
 
-    operator fun <T> invoke(service: Class<T>): T {
-        return getRetrofit().create(service)
+    operator fun <T> invoke(service: Class<T>, routerUrl: String): T {
+        return getRetrofit(routerUrl).create(service)
     }
 
-    private fun getRetrofit(): Retrofit {
+    private fun getRetrofit(routerUrl: String): Retrofit {
         return if (retrofit != null) {
             retrofit as Retrofit
         } else {
             retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(routerUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(getOkHttpClient())
                 .build()
